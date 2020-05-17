@@ -1,44 +1,60 @@
-#include <iostream>
 #include <fstream>
 #include <map>
-using namespace std;
+#include <algorithm>
+#include <iostream>
+#include <string>
 
+using namespace std;
 /**
   in this class implemented word, save information of  count and ending.
  **/
 
 class Sentence {
-public:
 
-    public: void print(string line) {
+public:
+    void print(string line) {
         map<string, int> stringStor;
         map<string, int> result;
-        string delim = " ";   // строка или символ разделитель
+        string delim = " ";
         size_t pos = 0;
         size_t base_str_size = line.size();
         size_t delim_size = delim.size();
-        string temp; // cлово
+        string temp;
+        string clearTemp;//for word without other sumbols
+
         while (pos < base_str_size) {
             temp = temp.assign(line, pos, line.find(delim, pos) - pos);
-            if (temp.size() > 0)  // проверка на пустую строку при необходимости
-                stringStor.insert ( pair<string ,int>(temp,0) );
+            //change to lowerCase
+            for(int i=0; i<sizeof(temp)-1; i++)
+            {
+                if(temp[i]>'A' && temp[i]<'Z') temp[i]+='z'-'Z';
+            }
+            //clear not alphabet sumbols
+            for(int i=0;i<temp.size();i++)//АТТЕНШЕН, СУКА
+                if(isalpha(temp[i]) > 0)
+                    clearTemp.insert(i, string(reinterpret_cast<const char *>(temp[i])));//ой хз, брат
+
+            if (temp.size() > 0)
+                if (stringStor.count(temp) > 0)//if i have this word in my map i increase counter of this word
+                {
+                    stringStor.find(temp)->second++;
+                }
+                    //if i didn't have this word i made new element on map
+                else stringStor.insert(pair<string, int>(temp, 1));
             pos += temp.size() + delim_size;
-
         }
-        //clear(stringStor)
-        //тут определим окончание и количество таких же слов (попутно удаляя дублеры)
-        for (int i = 0; i < stringStor.size(); i++)
+
+        for(auto& item : stringStor)
         {
-
+            cout << item.first << " : " << item.second << endl; //Вывод ключей и значений
         }
-
-        //тут выводим по такому принципу cout << mapValueString << "(" << mapValueInt << ")" << " "
 
     }
-//string[] clear (string stringStor[])
-//{}
+ void printer()
+ {//тут выводим по такому принципу cout << mapValueString << "(" << mapValueInt << ")" << " "
 
-
+     cout << "total number of distinguished words = " ;//<< размер переданного массива
+ }
 };
 
 int main() {
