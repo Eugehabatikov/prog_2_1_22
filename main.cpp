@@ -3,17 +3,27 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
+#include <cstring>
+#include <vector>
+
 
 using namespace std;
+
 /**
-  in this class implemented word, save information of  count and ending.
+  in this class implemented word, save information of quantity and ending.
  **/
 
 class Sentence {
 
 public:
+    Sentence(string line) {
+        print(line);
+    }
+
+    map<string, int> stringStor;
+
     void print(string line) {
-        map<string, int> stringStor;
+
         map<string, int> result;
         string delim = " ";
         size_t pos = 0;
@@ -25,13 +35,12 @@ public:
         while (pos < base_str_size) {
             temp = temp.assign(line, pos, line.find(delim, pos) - pos);
             //change to lowerCase
-            for(int i=0; i<sizeof(temp)-1; i++)
-            {
-                if(temp[i]>'A' && temp[i]<'Z') temp[i]+='z'-'Z';
+            for (int i = 0; i < sizeof(temp) - 1; i++) {
+                if (temp[i] > 'A' && temp[i] < 'Z') temp[i] += 'z' - 'Z';
             }
             //clear not alphabet sumbols
-            for(int i=0;i<temp.size();i++)//АТТЕНШЕН, СУКА
-                if(isalpha(temp[i]) > 0)
+            for (int i = 0; i < temp.size(); i++)//АТТЕНШЕН, СУКА
+                if (isalpha(temp[i]) > 0)
                     clearTemp.insert(i, string(reinterpret_cast<const char *>(temp[i])));//ой хз, брат
 
             if (temp.size() > 0)
@@ -43,31 +52,67 @@ public:
                 else stringStor.insert(pair<string, int>(temp, 1));
             pos += temp.size() + delim_size;
         }
+        printer();
+    }
 
-        for(auto& item : stringStor)
-        {
-            cout << item.first << " : " << item.second << endl; //Вывод ключей и значений
+
+    void printer() {
+        pair<string, int> max;
+        pair<string, int> otherPair;
+        const char *otherC;
+        const char *maxC;
+        map<string, int> result;//in this plase i save inform about result my sentence
+        for (auto &item : stringStor) {
+            max.first = item.first;
+            max.second = max.second;
+            maxC = &item.first[item.first.size() - 1];
+            if (result.count(max.first) == 0) {
+                for (auto &stor : stringStor) {
+                    otherPair.second = stor.second;
+                    otherPair.first = stor.first;
+                    otherC = &stor.first[stor.first.size() - 1];
+                    if (result.count(otherPair.first) == 0 && max.first != otherPair.first &&
+                        strcmp(maxC, otherC) > 0) {
+                        result.insert(max);
+                    } else if (result.count(otherPair.first) == 0 && max.first != otherPair.first &&
+                               strcmp(maxC, otherC) < 0) {
+                        max = otherPair;
+                    }
+                }
+            }
         }
+        for (auto &item : result) {
+            cout << ",";
+            cout << item.first << "(" << item.second << ")";
+        }
+        cout << "total number of distinguished words = " << stringStor.size() << result.size();
 
     }
- void printer()
- {//тут выводим по такому принципу cout << mapValueString << "(" << mapValueInt << ")" << " "
 
-     cout << "total number of distinguished words = " ;//<< размер переданного массива
- }
+
 };
 
 int main() {
-    string nameOfFile;
-    cout << "Hello, welcome to a board. ";//дописать приветствие
+    string nameOfFile;//for check to ready program
+    cout << "Hello, welcome to a board. This program can make you text to the principle: \n"
+            "For all word in one sentence i take all unique word,\n"
+            "count all duplicate this word in sentence, and sort descending on quantity duplicate \n"
+            "and last letter, on enter the sentence i print inform of count all unique word in sentence\n"
+            "Simple sentence: to be, or not to be, that is the question \n"
+            "result of program: be(2), to(2), the(1), question(1), or(1), is(1), not(1), that(1).(total unique word - 8)\n"
+            "when you want start using programm print path to you file where i can take you text\n";
     cin >> nameOfFile;
-    string line; //
-    ifstream in(nameOfFile);
-    if (in.is_open()) {
-        while (getline(in, line)) {
-            Sentence.print(line);
+        string line;
+        ifstream in(nameOfFile);
+        if (in.is_open())
+        {
+            while (getline(in, line))
+            {
+                new Sentence(line);
+            }
         }
+        in.close();
+        return 0;
     }
-    in.close();
-    return 0;
-}
+
+
